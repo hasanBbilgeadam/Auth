@@ -35,9 +35,16 @@ namespace Auth.Controllers
                
                 List<Claim> claims = new List<Claim>()
                 { 
-                    
+                    //email yerine ID basın
                     new Claim(ClaimTypes.Name,vm.Email),
                     new Claim(ClaimTypes.Role,"member"),
+                    //örnek olması açısında 1 eklendi
+                    //any yerine first or default
+                    //kullanıp direkt userı db'den çekebiliriz
+                    //if condition değişir bu durum
+                    //boolean kontrol yerine
+                    //user null mı kontrolü yapılır
+                    new Claim(ClaimTypes.NameIdentifier,"1")
                 
                 };
 
@@ -78,6 +85,8 @@ namespace Auth.Controllers
         [Authorize]
         public IActionResult Profil()
         {
+
+         var userid =  User.Claims.Where(x => x.Type == ClaimTypes.NameIdentifier).First().Value;
 
             var data = _context.AppUsers
                 .Where(x => x.Email == User.Identity.Name)
